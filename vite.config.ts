@@ -30,6 +30,9 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          if (id.includes('/node_modules/@lezer/')) return 'syntax-engine'
+          if (id.includes('/node_modules/@codemirror/view/')) return 'editor-view'
+          if (id.includes('/node_modules/@codemirror/state/')) return 'editor-state'
           if (id.includes('/node_modules/@codemirror/lang-javascript/')) return 'language-javascript'
           if (id.includes('/node_modules/@codemirror/lang-html/')) return 'language-html'
           if (id.includes('/node_modules/@codemirror/lang-css/')) return 'language-css'
