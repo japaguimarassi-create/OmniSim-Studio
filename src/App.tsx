@@ -63,7 +63,7 @@ let count = 0
 
 action?.addEventListener('click', () => {
   count += 1
-  action.textContent = `Você clicou ${count} vez(es)`
+  action.textContent = 'Você clicou ' + count + ' vez(es)'
 })`
   }
 ]
