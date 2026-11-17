@@ -153,10 +153,10 @@ function cleanPath(value: string): string {
 
 function getLanguage(path: string) {
   const ext = path.toLowerCase().split('.').pop()
-  if (ext === 'html' || ext === 'htm') return html()
-  if (ext === 'css') return css()
-  if (ext === 'ts' || ext === 'tsx') return javascript({ typescript: true, jsx: ext === 'tsx' })
-  if (ext === 'js' || ext === 'jsx' || ext === 'mjs') return javascript({ jsx: ext === 'jsx' })
+  if (ext === 'html' || ext === 'htm') return [html().extension]
+  if (ext === 'css') return [css().extension]
+  if (ext === 'ts' || ext === 'tsx') return [javascript({ typescript: true, jsx: ext === 'tsx' }).extension]
+  if (ext === 'js' || ext === 'jsx' || ext === 'mjs') return [javascript({ jsx: ext === 'jsx' }).extension]
   return []
 }
 
