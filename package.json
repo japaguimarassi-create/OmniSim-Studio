@@ -11,7 +11,10 @@
     "build": "tsc --noEmit -p tsconfig.json && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "check": "npm run typecheck && npm run build"
+    "check": "npm run typecheck && npm run build",
+    "cap:sync": "cap sync android",
+    "android:debug": "npm run build && cap sync android && cd android && ./gradlew assembleDebug",
+    "android:release": "npm run build && cap sync android && cd android && ./gradlew assembleRelease"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
@@ -22,7 +25,9 @@
     "jszip": "^3.10.1",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "@capacitor/core": "8.6.2",
+    "@capacitor/android": "8.6.2"
   },
   "devDependencies": {
     "@types/react": "^18.3.18",
@@ -30,6 +35,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.7.3",
     "vite": "^6.4.6",
-    "vite-plugin-pwa": "^0.21.1"
+    "vite-plugin-pwa": "^0.21.1",
+    "@capacitor/cli": "8.6.2"
   }
 }
