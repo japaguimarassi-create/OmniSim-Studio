@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080d18">
+  <meta name="description" content="Laboratório local de redes neurais evolutivas, simulação de 10.000 agentes e HUD de pesquisa para jogos offline.">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Neural Arena — Evolution Lab</title>
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Neural Arena início">
+      <span class="brand-mark"><span></span><span></span><span></span><span></span></span>
+      <span>NEURAL<span class="brand-light">ARENA</span></span>
+    </a>
+    <div class="top-meta"><span class="live-dot"></span> LABORATÓRIO LOCAL <span class="top-divider"></span><span id="connection-state">MOTOR PRONTO</span></div>
+    <button class="icon-button" id="install-button" hidden title="Instalar aplicativo">⇩ <span>Instalar</span></button>
+  </header>
+
+  <main id="top" class="shell">
+    <section class="intro">
+      <div class="eyebrow"><span class="eyebrow-line"></span> EVOLUTION / SANDBOX / GAME RESEARCH</div>
+      <div class="intro-row">
+        <div>
+          <h1>Treine. Observe.<br><span>Evolua.</span></h1>
+          <p class="intro-copy">Construa uma rede neural por evolução de gerações. Milhares de agentes enfrentam o mesmo desafio, aprendem com os resultados e transmitem os melhores parâmetros.</p>
+        </div>
+        <div class="intro-chip"><span class="chip-orbit">◎</span><div><strong>10.000</strong><small>AGENTES / GERAÇÃO</small></div></div>
+      </div>
+    </section>
+
+    <section class="metrics" aria-label="Métricas do treinamento">
+      <article class="metric-card"><div class="metric-label">GERAÇÃO ATUAL <span>01</span></div><div id="generation-value" class="metric-value">0001</div><div class="metric-foot">Ciclo evolutivo</div></article>
+      <article class="metric-card"><div class="metric-label">AGENTES ATIVOS <span>02</span></div><div id="alive-value" class="metric-value">10.000</div><div class="metric-foot"><span class="metric-live"></span> Em execução</div></article>
+      <article class="metric-card"><div class="metric-label">MELHOR DISTÂNCIA <span>03</span></div><div id="distance-value" class="metric-value">0<span class="metric-unit">m</span></div><div class="metric-foot">Recorde desta sessão</div></article>
+      <article class="metric-card"><div class="metric-label">FITNESS DA GERAÇÃO <span>04</span></div><div id="fitness-value" class="metric-value">0.00</div><div class="metric-foot">Média dos sobreviventes</div></article>
+    </section>
+
+    <section class="workspace">
+      <div class="main-column">
+        <section class="panel arena-panel">
+          <div class="panel-head">
+            <div><div class="section-kicker">01 / SIMULAÇÃO EM TEMPO REAL</div><h2>Arena evolutiva</h2></div>
+            <div class="panel-status"><span id="arena-status-dot" class="status-dot"></span><span id="arena-status">PAUSADO</span></div>
+          </div>
+          <div class="arena-toolbar">
+            <label class="select-wrap"><span>AMBIENTE</span><select id="environment-select"><option value="dino">Dino Runner · integrado</option><option value="minecraft">Minecraft · perfil de estudo</option></select></label>
+            <label class="select-wrap"><span>POPULAÇÃO</span><select id="population-select"><option value="10000" selected>10.000 agentes</option><option value="5000">5.000 agentes · leve</option><option value="2000">2.000 agentes · econômico</option></select></label>
+            <div class="arena-legend"><span><i class="legend-alive"></i>Vivos</span><span><i class="legend-dead"></i>Eliminados</span></div>
+          </div>
+          <div class="canvas-frame">
+            <canvas id="arena-canvas" aria-label="Visualização de agentes jogando em paralelo"></canvas>
+            <div class="canvas-overlay"><span class="overlay-label">LIVE SWARM VIEW</span><span id="sim-clock">00:00</span></div>
+            <div class="canvas-corner">100 × 100<br>AGENTS GRID</div>
+          </div>
+          <div class="arena-controls">
+            <button class="primary-button" id="train-button"><span class="button-icon">▶</span> Ativar modo treinamento</button>
+            <button class="secondary-button" id="reset-button">↺ Reiniciar geração</button>
+            <div class="speed-control"><label for="speed-select">VELOCIDADE</label><select id="speed-select"><option value="1">1×</option><option value="2" selected>2×</option><option value="4">4×</option></select></div>
+          </div>
+          <div class="progress-line"><div id="generation-progress"></div></div>
+          <div class="panel-foot"><span>REDE: <b>6 → 8 → 3</b> · 83 PARÂMETROS</span><span>SELEÇÃO NATURAL + MUTAÇÃO</span></div>
+        </section>
+
+        <section class="panel evolution-panel">
+          <div class="panel-head compact"><div><div class="section-kicker">02 / HISTÓRICO</div><h2>Curva de evolução</h2></div><span class="chart-caption">MELHOR FITNESS / GERAÇÃO</span></div>
+          <canvas id="evolution-chart" height="150" aria-label="Gráfico do progresso das gerações"></canvas>
+          <div class="chart-foot"><span><i class="chart-line"></i>Fitness máximo</span><span id="history-count">0 gerações concluídas</span></div>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel computer-panel">
+          <div class="panel-head compact"><div><div class="section-kicker">03 / AMBIENTE AUXILIAR</div><h2>Computador simulado</h2></div><span class="mini-terminal">$_</span></div>
+          <div class="terminal-window">
+            <div class="terminal-top"><span><i></i><i></i><i></i></span><small>NEURAL_OS / LOCAL</small><b>● ONLINE</b></div>
+            <div class="terminal-body" id="terminal-log"><p class="terminal-muted">Inicializando ambiente isolado...</p><p><span class="terminal-green">✓</span> Motor de pesquisa local carregado</p><p><span class="terminal-green">✓</span> Biblioteca de estratégias pronta</p><p><span class="terminal-cyan">›</span> Aguardando observação do jogo_</p></div>
+          </div>
+          <div class="tool-tabs" role="tablist" aria-label="Ferramentas do computador simulado">
+            <button class="tool-tab active" data-tab="study" role="tab" aria-selected="true">Estudar</button>
+            <button class="tool-tab" data-tab="research" role="tab" aria-selected="false">Pesquisar</button>
+            <button class="tool-tab" data-tab="modify" role="tab" aria-selected="false">Modificar</button>
+          </div>
+          <div class="tool-content" id="study-panel">
+            <div class="field-label">PERFIL DE JOGO</div>
+            <select id="study-profile" class="full-select"><option value="dino">Dino Runner</option><option value="minecraft">Minecraft · sobrevivência</option><option value="mining">Minecraft · mineração</option><option value="building">Minecraft · construção</option><option value="parkour">Minecraft · movimento / parkour</option></select>
+            <div class="upload-box"><input id="screen-upload" type="file" accept="image/*"><div class="upload-icon">▧</div><div><strong>Adicionar captura de tela</strong><small>Imagem processada localmente no aparelho</small></div><label for="screen-upload" class="upload-action">Abrir</label></div>
+            <div id="image-result" class="image-result" hidden></div>
+            <button class="secondary-button full-button" id="study-button">Analisar observação</button>
+          </div>
+          <div class="tool-content" id="research-panel" hidden>
+            <div class="field-label">PESQUISA PRÉ-PROGRAMADA</div>
+            <input id="research-query" class="text-input" placeholder="Ex.: mineração, FPS, inventário..." maxlength="90">
+            <div class="quick-tags"><button data-query="mineração">mineração</button><button data-query="FPS">FPS</button><button data-query="parkour">parkour</button><button data-query="mobs">mobs</button></div>
+            <button class="secondary-button full-button" id="research-button">Pesquisar biblioteca</button>
+          </div>
+          <div class="tool-content" id="modify-panel" hidden>
+            <div class="field-label">PLANO DE MODIFICAÇÃO</div>
+            <select id="modification-type" class="full-select"><option value="performance">Otimização / desempenho</option><option value="movement">Movimentação</option><option value="mining">Mineração</option><option value="building">Blocos / construção</option><option value="survival">Sobrevivência</option></select>
+            <textarea id="modification-notes" class="text-area" placeholder="Descreva a mudança desejada..." maxlength="500"></textarea>
+            <button class="secondary-button full-button" id="generate-plan-button">Gerar plano JSON</button>
+          </div>
+          <div class="tool-disclaimer">O computador é um sandbox local. Ele não acessa arquivos internos do jogo nem altera jogos online. Planos são propostas exportáveis, não patches automáticos.</div>
+        </section>
+
+        <section class="panel network-panel">
+          <div class="panel-head compact"><div><div class="section-kicker">04 / ARQUITETURA</div><h2>Rede neural</h2></div><span class="network-badge">NEURO-EVOLUÇÃO</span></div>
+          <div class="network-visual">
+            <div class="network-layer"><span class="layer-label">ENTRADA</span><div class="neurons six"><i></i><i></i><i></i><i></i><i></i><i></i></div><b>6</b></div>
+            <div class="network-connections"></div>
+            <div class="network-layer"><span class="layer-label">OCULTA</span><div class="neurons eight"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><b>8</b></div>
+            <div class="network-connections"></div>
+            <div class="network-layer"><span class="layer-label">SAÍDA</span><div class="neurons three"><i></i><i></i><i></i></div><b>3</b></div>
+          </div>
+          <div class="network-stats"><div><strong>83</strong><small>PESOS</small></div><div><strong>ReLU</strong><small>CAMADA OCULTA</small></div><div><strong>Sigmoid</strong><small>SAÍDA</small></div></div>
+        </section>
+
+        <section class="panel adapter-panel">
+          <div class="panel-head compact"><div><div class="section-kicker">05 / ADAPTADORES</div><h2>Compatibilidade</h2></div></div>
+          <div class="adapter-row"><span class="game-icon dino-icon">D</span><div><strong>Dino Runner</strong><small>Simulação integrada</small></div><span class="adapter-state ready">PRONTO</span></div>
+          <div class="adapter-row"><span class="game-icon mc-icon">▦</span><div><strong>Minecraft</strong><small>Captura manual + planos</small></div><span class="adapter-state limited">PARCIAL</span></div>
+          <div class="adapter-row"><span class="game-icon online-icon">×</span><div><strong>Jogos online / Roblox</strong><small>Sem injeção ou automação</small></div><span class="adapter-state blocked">NÃO SUPORTADO</span></div>
+        </section>
+      </aside>
+    </section>
+
+    <section class="notice-strip"><span class="notice-icon">i</span><p><strong>Limite técnico importante:</strong> 10.000 agentes são simulados em paralelo no ambiente integrado e renderizados como uma grade de enxame. Minecraft ainda não recebe comandos automáticos: nesta versão, o HUD auxilia a estudar capturas e criar planos. A integração real exige um adaptador específico e autorizado para a versão do jogo.</p></section>
+    <footer class="footer"><span>NEURAL ARENA <b>0.1.0</b></span><span>PROCESSAMENTO LOCAL · SEM API DE IA</span><span id="footer-install">PWA READY</span></footer>
+  </main>
+  <script src="/app.js" defer></script>
+</body>
+</html>

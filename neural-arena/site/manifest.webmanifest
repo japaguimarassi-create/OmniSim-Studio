@@ -1,0 +1,15 @@
+{
+  "name": "Neural Arena — Evolution Lab",
+  "short_name": "Neural Arena",
+  "description": "Laboratório local de redes neurais evolutivas e HUD de pesquisa para jogos.",
+  "lang": "pt-BR",
+  "start_url": "/?installed=1",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#080d18",
+  "theme_color": "#080d18",
+  "icons": [
+    {"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
